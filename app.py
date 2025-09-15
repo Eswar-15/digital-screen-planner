@@ -53,7 +53,23 @@ class ScheduledIntention(db.Model):
 # --- AUTHENTICATION ROUTES ---
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # Your login logic will go here
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
+        
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        user = User.query.filter_by(username=username).first()
+
+        # Check if user exists and password hash matches
+        if user and check_password_hash(user.password, password):
+            login_user(user)
+            return redirect(url_for('dashboard'))
+        # If login fails, you would normally show an error message
+        # For now, we just redirect back to the login page
+        return redirect(url_for('login'))
+
+    return render_template('login.html')
     pass
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -86,7 +102,8 @@ def register():
 @app.route('/logout')
 @login_required
 def logout():
-    # Your logout logic will go here
+    logout_user()
+    return redirect(url_for('login'))
     pass
 
 # --- RENDER TEMPLATE ROUTES ---
@@ -98,43 +115,101 @@ def dashboard():
 @app.route('/focus/<int:intention_id>')
 @login_required
 def focus_mode(intention_id):
-    # Your logic to get the intention and render the focus page
-    return render_template('focus.html')
+    intention = ScheduledIntention.query.get_or_404(intention_id)
+    if intention.owner != current_user:
+        return "Permission Denied", 403
+    return render_template('focus.html', intention=intention)
 
 # --- API ENDPOINTS ---
+
 # API for Manual Session Journaling
 @app.route('/api/sessions', methods=['GET', 'POST'])
 @login_required
 def handle_sessions():
     if request.method == 'POST':
-        # Logic to CREATE a new session (log intention)
-        pass
+        # CREATE a new session (log intention)
+        data = request.get_json()
+        new_session = UsageSession(
+            intention=data['intention'],
+            planned_duration=data['planned_duration'],
+            owner=current_user
+        )
+        db.session.add(new_session)
+        db.session.commit()
+        return jsonify({'message': 'Session started!'}), 201
     else: # GET
-        # Logic to READ all sessions for the dashboard
-        pass
+        # READ all sessions for the dashboard
+        sessions = UsageSession.query.filter_by(owner=current_user).order_by(UsageSession.start_time.desc()).all()
+        session_list = []
+        for session in sessions:
+            session_list.append({
+                'id': session.id,
+                'start_time': session.start_time.isoformat(),
+                'intention': session.intention,
+                'planned_duration': session.planned_duration,
+                'actual_duration': session.actual_duration,
+                'actual_activity': session.actual_activity,
+                'feeling': session.feeling
+            })
+        return jsonify(session_list)
 
 @app.route('/api/sessions/<int:session_id>', methods=['PUT'])
 @login_required
 def update_session(session_id):
-    # Logic to UPDATE a session (log reality)
-    pass
+    # UPDATE a session (log reality)
+    session = UsageSession.query.get_or_404(session_id)
+    if session.owner != current_user:
+        return jsonify({'message': 'Permission denied'}), 403
+    
+    data = request.get_json()
+    session.actual_duration = data['actual_duration']
+    session.actual_activity = data['actual_activity']
+    session.feeling = data['feeling']
+    db.session.commit()
+    return jsonify({'message': 'Session updated!'})
 
 # API for Scheduled Intentions
 @app.route('/api/schedule', methods=['GET', 'POST'])
 @login_required
 def handle_schedule():
     if request.method == 'POST':
-        # Logic to CREATE a new scheduled intention
-        pass
+        # CREATE a new scheduled intention
+        data = request.get_json()
+        new_intention = ScheduledIntention(
+            title=data['title'],
+            # Convert string from frontend back to a datetime object
+            scheduled_time=datetime.fromisoformat(data['scheduled_time']),
+            planned_duration=data['planned_duration'],
+            owner=current_user
+        )
+        db.session.add(new_intention)
+        db.session.commit()
+        return jsonify({'message': 'Intention scheduled!'}), 201
     else: # GET
-        # Logic to READ all scheduled intentions
-        pass
+        # READ all scheduled intentions
+        intentions = ScheduledIntention.query.filter_by(owner=current_user).order_by(ScheduledIntention.scheduled_time.asc()).all()
+        intention_list = []
+        for intention in intentions:
+            intention_list.append({
+                'id': intention.id,
+                'title': intention.title,
+                'scheduled_time': intention.scheduled_time.isoformat(),
+                'planned_duration': intention.planned_duration,
+                'is_completed': intention.is_completed
+            })
+        return jsonify(intention_list)
 
 @app.route('/api/schedule/<int:intention_id>/complete', methods=['PUT'])
 @login_required
 def complete_intention(intention_id):
     # Logic to mark a scheduled intention as complete
-    pass
+    intention = ScheduledIntention.query.get_or_404(intention_id)
+    if intention.owner != current_user:
+        return jsonify({'message': 'Permission denied'}), 403
+    
+    intention.is_completed = True
+    db.session.commit()
+    return jsonify({'message': 'Intention marked as complete!'})
 
 # --- DATABASE CREATION & APP RUN ---
 if __name__ == '__main__':

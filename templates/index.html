@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Digital Screen Planner</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body class="dashboard-body">
+    <div class="container">
+      <header class="header">
+        <h1>Digital Screen Planner</h1>
+        <p class="welcome-text">
+          Welcome, <strong>{{ current_user.username }}</strong>! |
+          <a href="{{ url_for('logout') }}">Logout</a>
+        </p>
+      </header>
+
+      <main>
+        <div class="card">
+          <h2>Create New</h2>
+          <form id="start-session-form" style="margin-bottom: 2rem">
+            <div class="form-grid" style="grid-template-columns: 2fr 1fr auto">
+              <input
+                type="text"
+                id="intention"
+                name="intention"
+                placeholder="Log a completed session..."
+                required
+              />
+              <input
+                type="number"
+                id="planned_duration"
+                name="planned_duration"
+                placeholder="Planned (min)"
+                min="1"
+                required
+              />
+              <button type="submit">Log Session</button>
+            </div>
+          </form>
+
+          <form id="schedule-intention-form">
+            <div
+              class="form-grid"
+              style="grid-template-columns: 2fr 1.5fr 1fr auto"
+            >
+              <input
+                type="text"
+                id="schedule-title"
+                name="title"
+                placeholder="Schedule a future session..."
+                required
+              />
+              <input
+                type="datetime-local"
+                id="schedule-time"
+                name="scheduled_time"
+                required
+              />
+              <input
+                type="number"
+                id="schedule-duration"
+                name="planned_duration"
+                placeholder="Planned (min)"
+                min="1"
+                required
+              />
+              <button type="submit">Schedule</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2>Your Scheduled Intentions</h2>
+          <div id="upcoming-intentions-container"></div>
+        </div>
+
+        <div class="card">
+          <h2>Your Session History</h2>
+          <div id="session-history-container"></div>
+        </div>
+      </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+  </body>
+</html>

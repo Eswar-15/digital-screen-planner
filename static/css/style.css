@@ -1,0 +1,193 @@
+/* --- Universal Settings & Background --- */
+body {
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+  margin: 0;
+  background-color: #121212; /* Dark background */
+  color: #e0e0e0; /* Light text for dark background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* --- Authentication Page (Login/Register) Specifics --- */
+.auth-wrapper {
+  width: 100%;
+  background-image: url("https://images.unsplash.com/photo-1534796636912-3b95b3ab5986");
+  background-size: cover;
+  background-position: center;
+}
+
+.auth-container {
+  background: rgba(29, 29, 29, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 3rem 4rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+  backdrop-filter: blur(10px);
+  width: 100%;
+  max-width: 480px; /* Bigger box */
+  text-align: center;
+}
+
+.auth-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+  font-size: 1.1rem;
+  color: #a0a0a0;
+  margin-bottom: 2.5rem;
+}
+
+.auth-form .form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.auth-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #c0c0c0;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #444;
+  background-color: #222;
+  color: #e0e0e0;
+  border-radius: 8px;
+  font-size: 1.5rem !important; /* Added !important to force the change */
+  box-sizing: border-box;
+}
+.auth-button {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #6a11cb; /* A stunning purple */
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.auth-button:hover {
+  background-color: #2575fc; /* A nice blue for hover */
+}
+
+.auth-link {
+  margin-top: 1.5rem;
+  color: #a0a0a0;
+}
+
+.auth-link a {
+  color: #6a11cb;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* --- Dashboard Page Specifics --- */
+.dashboard-body {
+  align-items: flex-start; /* Align content to the top for dashboard */
+}
+
+.container {
+  width: 100%;
+  max-width: 950px;
+  margin: 3rem auto;
+  padding: 0 1rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.header .welcome-text {
+  font-size: 1.2rem;
+  color: #a0a0a0;
+}
+
+.header a {
+  color: #6a11cb;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.card {
+  background: #1e1e1e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card h2 {
+  font-size: 1.8rem;
+  border-bottom: 1px solid #444;
+  padding-bottom: 1rem;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #ffffff;
+}
+
+.form-grid {
+  display: grid;
+  gap: 1.5rem;
+  align-items: end;
+}
+
+.card button {
+  background-color: #6a11cb;
+}
+.card button:hover {
+  background-color: #2575fc;
+}
+
+.session-item,
+.intention-item {
+  border-bottom: 1px solid #333;
+  padding: 1.5rem 0;
+  font-size: 1.1rem; /* Bigger text */
+}
+
+.item-header strong {
+  font-size: 1.2rem; /* Bigger text */
+  color: #ffffff;
+}
+
+.item-meta,
+.item-header em {
+  color: #a0a0a0;
+}
+
+.distracted {
+  color: #ff4d4d;
+}
+.start-focus-link {
+  color: #6a11cb;
+}
+/* --- Make ALL Dashboard Input Boxes Bigger --- */
+.card .form-grid input {
+  padding: 1rem; /* Increases the height and internal space */
+  font-size: 1rem; /* Makes the text inside bigger */
+  box-sizing: border-box; /* Ensures padding is included correctly */
+}
+/* --- Make Dashboard BUTTONS Bigger --- */
+.card .form-grid button {
+  padding: 1rem; /* Match the padding of the input boxes */
+  font-size: 1rem; /* Match the font size */
+}
